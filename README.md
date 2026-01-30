@@ -103,8 +103,20 @@ Open **http://localhost:3000** and see:
 ### 🔍 **Complete Visibility**
 Track every agent call with input, output, duration, cost, and status.
 
-### 💰 **Cost Tracking**
-See exactly how much each agent costs. No more surprise bills.
+### 💰 **Automatic Cost Tracking**
+Argus automatically calculates costs for:
+- **OpenAI**: GPT-4, GPT-3.5 Turbo, GPT-4o
+- **Anthropic**: Claude 3 (Opus, Sonnet, Haiku)
+- **Cohere**: Command, Command Light
+
+No manual cost calculation needed - just pass `provider` and `model`:
+
+```python
+@watch.agent(name="gpt-bot", provider="openai", model="gpt-4")
+def ask_gpt(prompt):
+    response = openai.ChatCompletion.create(...)
+    return response  # Cost calculated automatically!
+```
 
 ### ⚡ **Performance Monitoring**
 Identify slow agents. Optimize what matters.
@@ -142,31 +154,53 @@ from openai import OpenAI
 
 client = OpenAI()
 
-@watch.agent(name="gpt-assistant", tags=["openai", "production"])
+@watch.agent(
+    name="gpt-assistant",
+    provider="openai",      # Enable automatic cost calculation
+    model="gpt-4",          # Specify model for pricing
+    tags=["openai", "production"]
+)
 def ask_gpt(prompt: str):
     response = client.chat.completions.create(
         model="gpt-4",
         messages=[{"role": "user", "content": prompt}]
     )
-    
-    # Calculate cost
-    tokens = response.usage.total_tokens
-    cost = (tokens / 1000) * 0.03  # GPT-4 pricing
-    
-    return {
-        "answer": response.choices[0].message.content,
-        "tokens": tokens,
-        "cost": cost
-    }
+    # Cost is automatically calculated from token usage!
+    return response
 
 # Use it
 result = ask_gpt("Explain quantum computing")
-print(f"Answer: {result['answer']}")
-print(f"Cost: ${result['cost']:.4f}")
+print(f"Answer: {result.choices[0].message.content}")
 
 # Check total costs
 stats = watch.stats(agent_name="gpt-assistant")
 print(f"Total spent: ${stats['total_cost']:.2f}")
+```
+
+### Anthropic Claude Integration
+
+```python
+from argus import watch
+from anthropic import Anthropic
+
+client = Anthropic()
+
+@watch.agent(
+    name="claude-assistant",
+    provider="anthropic",
+    model="claude-3-opus-20240229",
+    tags=["anthropic", "production"]
+)
+def ask_claude(prompt: str):
+    response = client.messages.create(
+        model="claude-3-opus-20240229",
+        max_tokens=1024,
+        messages=[{"role": "user", "content": prompt}]
+    )
+    # Cost automatically calculated!
+    return response
+
+result = ask_claude("What is the meaning of life?")
 ```
 
 ### Multiple Agents
