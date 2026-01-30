@@ -307,6 +307,34 @@ Inspired by:
 
 ---
 
+## 🔌 Integrations
+
+### Kiro IDE
+
+AgentWatch works great with Kiro AI assistant! Monitor your AI coding sessions:
+
+```python
+from agentwatch import watch
+
+@watch.agent(name="kiro-assistant", tags=["kiro", "production"])
+def ask_kiro(prompt: str):
+    response = kiro.process(prompt)
+    return response
+
+# Track: token usage, costs, response times, errors
+result = ask_kiro("How do I use decorators?")
+```
+
+See `examples/kiro_integration.py` and `docs/KIRO_INTEGRATION.md` for complete guide.
+
+### Coming Soon
+- LangChain
+- LlamaIndex
+- AutoGPT
+- CrewAI
+
+---
+
 ## 📄 License
 
 MIT License - see [LICENSE](LICENSE) file
@@ -315,10 +343,9 @@ MIT License - see [LICENSE](LICENSE) file
 
 ## 🔗 Links
 
-- **GitHub:** https://github.com/yourusername/agentwatch
-- **Docs:** https://agentwatch.dev
-- **Discord:** https://discord.gg/agentwatch
-- **Twitter:** @agentwatchdev
+- **GitHub:** https://github.com/sh1esty1769/AI-for-observability
+- **Issues:** https://github.com/sh1esty1769/AI-for-observability/issues
+- **Discussions:** https://github.com/sh1esty1769/AI-for-observability/discussions
 
 ---
 
@@ -326,7 +353,7 @@ MIT License - see [LICENSE](LICENSE) file
 
 If AgentWatch helps you, give us a star! It helps others discover the project.
 
-[![GitHub stars](https://img.shields.io/github/stars/yourusername/agentwatch.svg?style=social&label=Star)](https://github.com/yourusername/agentwatch)
+[![GitHub stars](https://img.shields.io/github/stars/sh1esty1769/AI-for-observability.svg?style=social&label=Star)](https://github.com/sh1esty1769/AI-for-observability)
 
 ---
 
