@@ -284,6 +284,49 @@ watch.end(
 
 ---
 
+## 🔌 Integrations
+
+### LangChain
+
+Argus seamlessly integrates with LangChain - just add a callback handler!
+
+```python
+from argus.integrations import ArgusCallbackHandler
+from langchain.llms import OpenAI
+
+# Create callback
+callback = ArgusCallbackHandler(
+    agent_name="my-langchain-bot",
+    tags=["langchain", "production"]
+)
+
+# Add to any LLM
+llm = OpenAI(callbacks=[callback])
+
+# All calls automatically tracked!
+response = llm("What is the meaning of life?")
+```
+
+**Works with:**
+- ✅ All LangChain LLMs (OpenAI, Anthropic, Cohere, etc.)
+- ✅ Chat models (`ChatOpenAI`, `ChatAnthropic`)
+- ✅ Chains and agents
+- ✅ Automatic cost calculation
+- ✅ Error tracking
+
+See [`examples/langchain_example.py`](examples/langchain_example.py) for more examples.
+
+### Coming Soon
+
+- [ ] LlamaIndex integration
+- [ ] AutoGPT integration
+- [ ] CrewAI integration
+- [ ] Haystack integration
+
+Want to add an integration? [Open an issue](https://github.com/sh1esty1769/argus/issues)!
+
+---
+
 ## 🎛️ Dashboard
 
 ### Start Dashboard
