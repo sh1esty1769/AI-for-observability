@@ -10,6 +10,11 @@ from datetime import datetime
 
 from .storage import Storage
 from .dashboard import start_dashboard
+from .pricing import (
+    calculate_cost,
+    extract_openai_usage,
+    extract_anthropic_usage
+)
 
 
 class Watch:
@@ -33,7 +38,9 @@ class Watch:
         name: str,
         tags: Optional[List[str]] = None,
         cost_per_call: Optional[float] = None,
-        timeout: Optional[int] = None
+        timeout: Optional[int] = None,
+        provider: Optional[str] = None,
+        model: Optional[str] = None
     ) -> Callable:
         """
         Decorator to watch an agent function
@@ -43,11 +50,19 @@ class Watch:
             tags: Optional tags for categorization
             cost_per_call: Manual cost override
             timeout: Timeout in seconds
+            provider: LLM provider ("openai", "anthropic", "cohere") for auto cost calculation
+            model: Model name for auto cost calculation
         
         Example:
             @watch.agent(name="email-bot", tags=["production"])
             def send_email(to, subject):
                 return send_via_api(to, subject)
+            
+            # With automatic cost calculation:
+            @watch.agent(name="gpt-bot", provider="openai", model="gpt-4")
+            def ask_gpt(prompt):
+                response = openai.ChatCompletion.create(...)
+                return response
         """
         def decorator(func: Callable) -> Callable:
             @wraps(func)
@@ -81,6 +96,25 @@ class Watch:
                     # Extract cost from result if it's a dict with 'cost' key
                     if isinstance(result, dict) and 'cost' in result:
                         calculated_cost = result['cost']
+                    
+                    # Auto-calculate cost from LLM response
+                    elif provider and model:
+                        usage = None
+                        
+                        # Try to extract usage from response
+                        if provider.lower() == "openai":
+                            usage = extract_openai_usage(result)
+                        elif provider.lower() == "anthropic":
+                            usage = extract_anthropic_usage(result)
+                        
+                        # Calculate cost if usage found
+                        if usage:
+                            calculated_cost = calculate_cost(
+                                provider=provider,
+                                model=model,
+                                input_tokens=usage.get('input_tokens', 0),
+                                output_tokens=usage.get('output_tokens', 0)
+                            )
                     
                     return result
                     
