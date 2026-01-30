@@ -6,6 +6,7 @@ Stop flying blind. See what your AI agents are doing.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
+[![Twitter Follow](https://img.shields.io/twitter/follow/maxcodesai?style=social)](https://x.com/maxcodesai)
 
 ---
 
@@ -346,6 +347,7 @@ MIT License - see [LICENSE](LICENSE) file
 - **GitHub:** https://github.com/sh1esty1769/AI-for-observability
 - **Issues:** https://github.com/sh1esty1769/AI-for-observability/issues
 - **Discussions:** https://github.com/sh1esty1769/AI-for-observability/discussions
+- **Twitter/X:** [@maxcodesai](https://x.com/maxcodesai)
 
 ---
 
