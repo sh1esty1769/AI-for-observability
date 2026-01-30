@@ -1,41 +1,55 @@
+<div align="center">
+
 # 👁️ AgentWatch
 
-**Open Source Observability for AI Agents**
+### Open Source Observability for AI Agents
 
-Stop flying blind. See what your AI agents are doing.
+**Stop flying blind. See what your AI agents are doing.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
 [![Twitter Follow](https://img.shields.io/twitter/follow/maxcodesai?style=social)](https://x.com/maxcodesai)
 
+[Quick Start](#-quick-start) • [Features](#-features) • [Examples](#-examples) • [Dashboard](#-dashboard) • [Integrations](#-integrations)
+
+<img src="https://via.placeholder.com/800x400/667eea/ffffff?text=AgentWatch+Dashboard+Preview" alt="AgentWatch Dashboard" width="800"/>
+
+</div>
+
 ---
 
-## 🎯 What is AgentWatch?
+## 🎯 The Problem
 
-AgentWatch is a lightweight observability library for AI agents. It logs every action, tracks costs, and shows everything in a beautiful dashboard.
+You're building AI agents with GPT-4, Claude, or local models. They work... but you have **no idea** what's happening:
 
-**One decorator. Complete visibility.**
+- 💸 **"Why is my API bill $5,000?"** - No cost tracking
+- 🐌 **"Why is this so slow?"** - No performance metrics  
+- 💥 **"Why did it fail?"** - No error monitoring
+- 📊 **"Which agent is expensive?"** - No analytics
+
+**You're flying blind.**
+
+---
+
+## ✨ The Solution
+
+**AgentWatch** - One decorator. Complete visibility.
 
 ```python
 from agentwatch import watch
 
-@watch.agent(name="email-bot")
-def send_email(to: str, subject: str) -> dict:
-    response = openai.ChatCompletion.create(
-        model="gpt-4",
-        messages=[{"role": "user", "content": f"Write email to {to} about {subject}"}]
-    )
+@watch.agent(name="my-agent")
+def my_ai_function(prompt: str):
+    response = openai.ChatCompletion.create(...)
     return response
 
-# Every call is now logged with:
-# ✅ Input/Output
-# ✅ Cost ($0.002)
-# ✅ Latency (1.2s)
-# ✅ Timestamp
-# ✅ Success/Error
+# That's it! Now you see everything:
+# ✅ Every call logged
+# ✅ Cost tracked in real-time
+# ✅ Performance monitored
+# ✅ Errors caught
+# ✅ Beautiful dashboard
 ```
-
-**View Dashboard:** `http://localhost:3000`
 
 ---
 
@@ -51,260 +65,250 @@ pip install agentwatch
 
 ```python
 from agentwatch import watch
-import openai
 
-# Wrap your agent function
-@watch.agent(name="customer-support")
-def answer_question(question: str) -> str:
+@watch.agent(name="email-bot", tags=["production"])
+def send_email(to: str, subject: str):
+    # Your AI logic here
     response = openai.ChatCompletion.create(
         model="gpt-4",
-        messages=[{"role": "user", "content": question}]
+        messages=[{"role": "user", "content": f"Write email to {to} about {subject}"}]
     )
     return response.choices[0].message.content
 
 # Use it normally
-answer = answer_question("How do I reset my password?")
+result = send_email("user@example.com", "Meeting Tomorrow")
 
-# Check dashboard
-watch.dashboard()  # Opens http://localhost:3000
+# Every call is now tracked!
 ```
+
+### View Dashboard
+
+```bash
+agentwatch dashboard
+```
+
+Open **http://localhost:3000** and see:
+
+- 📊 Total calls, costs, errors
+- ⚡ Performance metrics per agent
+- 📈 Real-time activity feed
+- 🎯 Cost breakdown by agent
 
 ---
 
-## ✨ Features
+## 🎨 Features
 
-### 📊 **Automatic Logging**
-- Every agent call logged automatically
-- Input/output captured (sanitized)
-- Timestamps and duration
-- Success/error status
+### 🔍 **Complete Visibility**
+Track every agent call with input, output, duration, cost, and status.
 
 ### 💰 **Cost Tracking**
-- Automatic cost calculation for OpenAI/Anthropic
-- Cost per agent
-- Daily/weekly/monthly breakdown
-- Budget alerts
+See exactly how much each agent costs. No more surprise bills.
 
-### ⚡ **Performance Metrics**
-- Latency tracking
-- Token usage
-- Success rate
-- Error rate
+### ⚡ **Performance Monitoring**
+Identify slow agents. Optimize what matters.
 
-### 🎨 **Beautiful Dashboard**
-- Real-time updates
-- Agent list with stats
-- Call history
-- Cost graphs
-- Performance charts
+### 🐛 **Error Tracking**
+Catch failures instantly. See error rates per agent.
 
-### 🔒 **Privacy First**
-- Everything runs locally
-- No data sent to cloud
-- SQLite storage
-- You own your data
+### 📊 **Beautiful Dashboard**
+Real-time web UI with charts, stats, and activity feed.
+
+### 🗄️ **Local Storage**
+Everything stored in SQLite. No cloud required. Your data stays yours.
+
+### 🏷️ **Tags & Filtering**
+Organize agents by environment, team, or purpose.
+
+### 📤 **Export Data**
+Export to CSV/JSON for analysis in Excel, Python, or BI tools.
+
+### 🚀 **Zero Config**
+Works out of the box. No setup, no API keys, no hassle.
+
+### 🪶 **Lightweight**
+< 1ms overhead per call. Won't slow down your agents.
 
 ---
 
-## 📖 Documentation
+## 📸 Dashboard Preview
 
-### Decorating Functions
+<div align="center">
+
+### Overview Stats
+<img src="https://via.placeholder.com/700x200/667eea/ffffff?text=Total+Calls+%7C+Cost+%7C+Errors+%7C+Avg+Duration" alt="Stats" width="700"/>
+
+### Per-Agent Metrics
+<img src="https://via.placeholder.com/700x250/764ba2/ffffff?text=Agent+Cards+with+Calls%2C+Cost%2C+Duration%2C+Errors" alt="Agents" width="700"/>
+
+### Recent Activity
+<img src="https://via.placeholder.com/700x300/667eea/ffffff?text=Real-time+Call+Log+with+Status%2C+Duration%2C+Cost" alt="Activity" width="700"/>
+
+</div>
+
+---
+
+## 💡 Examples
+
+### OpenAI Integration
 
 ```python
-@watch.agent(
-    name="my-agent",           # Agent name
-    tags=["production"],       # Optional tags
-    cost_per_call=0.01,       # Manual cost (optional)
-    timeout=30                 # Timeout in seconds
-)
-def my_agent_function():
-    pass
+from agentwatch import watch
+from openai import OpenAI
+
+client = OpenAI()
+
+@watch.agent(name="gpt-assistant", tags=["openai", "production"])
+def ask_gpt(prompt: str):
+    response = client.chat.completions.create(
+        model="gpt-4",
+        messages=[{"role": "user", "content": prompt}]
+    )
+    
+    # Calculate cost
+    tokens = response.usage.total_tokens
+    cost = (tokens / 1000) * 0.03  # GPT-4 pricing
+    
+    return {
+        "answer": response.choices[0].message.content,
+        "tokens": tokens,
+        "cost": cost
+    }
+
+# Use it
+result = ask_gpt("Explain quantum computing")
+print(f"Answer: {result['answer']}")
+print(f"Cost: ${result['cost']:.4f}")
+
+# Check total costs
+stats = watch.stats(agent_name="gpt-assistant")
+print(f"Total spent: ${stats['total_cost']:.2f}")
 ```
 
-### Manual Logging
+### Multiple Agents
+
+```python
+from agentwatch import watch
+
+@watch.agent(name="email-bot", tags=["production"])
+def send_email(to: str, subject: str):
+    # Email logic
+    return {"status": "sent"}
+
+@watch.agent(name="slack-bot", tags=["production"])
+def send_slack(channel: str, message: str):
+    # Slack logic
+    return {"status": "sent"}
+
+@watch.agent(name="data-processor", tags=["etl"])
+def process_data(data: list):
+    # Processing logic
+    return {"processed": len(data)}
+
+# Use them
+send_email("user@example.com", "Hello")
+send_slack("#general", "Deployment complete")
+process_data([1, 2, 3, 4, 5])
+
+# See stats for all agents
+stats = watch.stats()
+print(f"Total agents: {stats['total_agents']}")
+print(f"Total calls: {stats['total_calls']}")
+print(f"Total cost: ${stats['total_cost']:.2f}")
+```
+
+### Error Tracking
+
+```python
+from agentwatch import watch
+
+@watch.agent(name="risky-agent", tags=["experimental"])
+def risky_operation(data: dict):
+    if not data.get("valid"):
+        raise ValueError("Invalid data")
+    return {"result": "success"}
+
+# Errors are automatically tracked
+try:
+    risky_operation({"valid": False})
+except ValueError:
+    pass
+
+# Check error rate
+stats = watch.stats(agent_name="risky-agent")
+print(f"Error rate: {stats['error_rate']*100:.1f}%")
+```
+
+### Manual Tracking
+
+For more control:
 
 ```python
 from agentwatch import watch
 
 # Start tracking
-call_id = watch.start("agent-name", input_data={"query": "..."})
+call_id = watch.start(
+    agent_name="custom-agent",
+    input_data={"prompt": "Hello"}
+)
 
-# Your agent logic
+# Your logic
 result = do_something()
 
 # End tracking
-watch.end(call_id, output_data=result, cost=0.002)
-```
-
-### Dashboard
-
-```python
-# Start dashboard server
-watch.dashboard(port=3000)
-
-# Or via CLI
-agentwatch dashboard --port 3000
-```
-
-### Export Data
-
-```python
-# Export to CSV
-watch.export("calls.csv", format="csv")
-
-# Export to JSON
-watch.export("calls.json", format="json")
-
-# Get stats
-stats = watch.stats(agent_name="email-bot")
-print(f"Total calls: {stats['total_calls']}")
-print(f"Total cost: ${stats['total_cost']}")
-```
-
----
-
-## 🎯 Use Cases
-
-### 1. **Debugging**
-See exactly what your agent is doing:
-```python
-@watch.agent(name="debug-bot")
-def problematic_function(input):
-    # Check dashboard to see all inputs/outputs
-    return process(input)
-```
-
-### 2. **Cost Optimization**
-Track which agents cost the most:
-```python
-stats = watch.stats()
-for agent in stats['agents']:
-    print(f"{agent['name']}: ${agent['total_cost']}")
-```
-
-### 3. **Performance Monitoring**
-Find slow agents:
-```python
-stats = watch.stats()
-slow_agents = [a for a in stats['agents'] if a['avg_latency'] > 5.0]
-```
-
-### 4. **Production Monitoring**
-Monitor agents in production:
-```python
-@watch.agent(name="prod-agent", tags=["production"])
-def production_agent():
-    pass
-
-# Set up alerts
-watch.alert(
-    agent_name="prod-agent",
-    condition="error_rate > 0.1",
-    action="email"
+watch.end(
+    call_id=call_id,
+    output_data={"result": result},
+    cost=0.002,
+    error=None  # or error message if failed
 )
 ```
 
 ---
 
-## 🏗️ Architecture
+## 🎛️ Dashboard
 
-```
-┌─────────────────────────────────────┐
-│     Your Application                │
-│                                     │
-│  @watch.agent(name="bot")          │
-│  def my_agent():                    │
-│      return openai.chat(...)        │
-└─────────────────────────────────────┘
-              ↓
-┌─────────────────────────────────────┐
-│     AgentWatch SDK                  │
-│  - Intercepts calls                 │
-│  - Logs to SQLite                   │
-│  - Calculates costs                 │
-└─────────────────────────────────────┘
-              ↓
-┌─────────────────────────────────────┐
-│     SQLite Database                 │
-│  - agents.db (local)                │
-│  - All data stays on your machine   │
-└─────────────────────────────────────┘
-              ↓
-┌─────────────────────────────────────┐
-│     Dashboard (Flask)               │
-│  - http://localhost:3000            │
-│  - Real-time updates                │
-│  - Beautiful UI                     │
-└─────────────────────────────────────┘
+### Start Dashboard
+
+```bash
+# Default port (3000)
+agentwatch dashboard
+
+# Custom port
+agentwatch dashboard --port 8080
+
+# Custom database
+agentwatch dashboard --db /path/to/custom.db
 ```
 
----
+### Features
 
-## 🤝 Contributing
-
-We love contributions! Here's how:
-
-1. Fork the repo
-2. Create a branch (`git checkout -b feature/amazing`)
-3. Commit changes (`git commit -m 'Add amazing feature'`)
-4. Push (`git push origin feature/amazing`)
-5. Open a Pull Request
+- **📊 Overview Stats** - Total calls, costs, errors at a glance
+- **🤖 Agent Cards** - Per-agent metrics with drill-down
+- **📞 Activity Feed** - Real-time call log with filtering
+- **🔄 Auto-refresh** - Updates every 5 seconds
+- **🎨 Beautiful UI** - Clean, modern design
 
 ---
 
-## 📝 Roadmap
+## 🔧 CLI Commands
 
-- [x] Basic decorator
-- [x] SQLite logging
-- [x] Simple dashboard
-- [ ] Cost calculation for OpenAI
-- [ ] Cost calculation for Anthropic
-- [ ] Real-time dashboard updates
-- [ ] Export to CSV/JSON
-- [ ] Alerts system
-- [ ] JavaScript SDK
-- [ ] LangChain integration
-- [ ] Docker support
-- [ ] Cloud version (paid)
+```bash
+# View statistics
+agentwatch stats
 
----
+# Filter by agent
+agentwatch stats --agent my-agent
 
-## 🌟 Why AgentWatch?
+# List all agents
+agentwatch list
 
-### vs. LangSmith
-- ✅ **Free & Open Source** (LangSmith = $39/mo)
-- ✅ **Runs locally** (no data sent to cloud)
-- ✅ **Simple** (one decorator vs complex setup)
+# Export data
+agentwatch export data.csv
+agentwatch export data.json --format json
 
-### vs. Helicone
-- ✅ **No proxy required** (Helicone needs proxy)
-- ✅ **Works with any LLM** (not just OpenAI)
-- ✅ **Self-hosted** (you own your data)
-
-### vs. Building Your Own
-- ✅ **Ready in 5 minutes** (vs weeks of work)
-- ✅ **Beautiful dashboard** (vs ugly logs)
-- ✅ **Maintained** (vs abandoned side project)
-
----
-
-## 📊 Stats
-
-- **Lines of Code:** ~500
-- **Dependencies:** 3 (Flask, SQLAlchemy, Click)
-- **Size:** <100KB
-- **Performance Overhead:** <10ms per call
-
----
-
-## 🙏 Credits
-
-Built with ❤️ by developers who were tired of flying blind.
-
-Inspired by:
-- Sentry (error tracking)
-- Datadog (observability)
-- LangSmith (LLM observability)
+# Start dashboard
+agentwatch dashboard --port 3000
+```
 
 ---
 
@@ -312,7 +316,7 @@ Inspired by:
 
 ### Kiro IDE
 
-AgentWatch works great with Kiro AI assistant! Monitor your AI coding sessions:
+Monitor your Kiro AI assistant:
 
 ```python
 from agentwatch import watch
@@ -326,19 +330,208 @@ def ask_kiro(prompt: str):
 result = ask_kiro("How do I use decorators?")
 ```
 
-See `examples/kiro_integration.py` and `docs/KIRO_INTEGRATION.md` for complete guide.
+See [`examples/kiro_integration.py`](examples/kiro_integration.py) and [`docs/KIRO_INTEGRATION.md`](docs/KIRO_INTEGRATION.md)
 
-### Coming Soon
-- LangChain
-- LlamaIndex
-- AutoGPT
-- CrewAI
+### LangChain (Coming Soon)
+
+```python
+from agentwatch import watch
+from langchain import OpenAI
+
+@watch.agent(name="langchain-agent")
+def langchain_call(prompt: str):
+    llm = OpenAI()
+    return llm(prompt)
+```
+
+### LlamaIndex (Coming Soon)
+
+### AutoGPT (Coming Soon)
+
+### CrewAI (Coming Soon)
+
+---
+
+## 📚 Documentation
+
+- [Quick Start Guide](QUICKSTART.md) - Get started in 5 minutes
+- [Kiro Integration](docs/KIRO_INTEGRATION.md) - Monitor Kiro AI assistant
+- [Examples](examples/) - Real-world usage examples
+- [Contributing](CONTRIBUTING.md) - How to contribute
+- [Changelog](CHANGELOG.md) - Version history
+- [Roadmap](TODO.md) - What's coming next
+
+---
+
+## 🎯 Use Cases
+
+### 1. **Cost Control**
+Track API costs in real-time. Set budgets. Avoid surprise bills.
+
+### 2. **Performance Optimization**
+Find slow agents. Optimize bottlenecks. Improve user experience.
+
+### 3. **Error Monitoring**
+Catch failures instantly. Debug faster. Improve reliability.
+
+### 4. **Usage Analytics**
+Understand how agents are used. Make data-driven decisions.
+
+### 5. **Development**
+Debug agents during development. See what's happening under the hood.
+
+### 6. **Production Monitoring**
+Monitor agents in production. Get alerted on issues.
+
+---
+
+## 🏆 Why AgentWatch?
+
+### vs. Manual Logging
+- ❌ Manual: Write logging code everywhere
+- ✅ AgentWatch: One decorator
+
+### vs. Cloud Services
+- ❌ Cloud: Send data to third parties, pay monthly
+- ✅ AgentWatch: Local storage, free forever
+
+### vs. Building Your Own
+- ❌ DIY: Weeks of development, maintenance burden
+- ✅ AgentWatch: Install in 30 seconds, works out of the box
+
+### vs. Nothing
+- ❌ Nothing: Flying blind, surprise bills, no debugging
+- ✅ AgentWatch: Complete visibility, cost control, easy debugging
+
+---
+
+## 🚦 Getting Started
+
+### 1. Install
+
+```bash
+pip install agentwatch
+```
+
+### 2. Add Decorator
+
+```python
+from agentwatch import watch
+
+@watch.agent(name="my-agent")
+def my_function():
+    return "result"
+```
+
+### 3. View Dashboard
+
+```bash
+agentwatch dashboard
+```
+
+### 4. Open Browser
+
+http://localhost:3000
+
+**That's it!** 🎉
+
+---
+
+## 🤝 Contributing
+
+We love contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+
+### Areas We Need Help
+
+- 🔌 More LLM integrations (Anthropic, Cohere, etc.)
+- 💰 Better cost calculation algorithms
+- 🎨 Dashboard improvements
+- 📊 Advanced analytics features
+- 📖 Documentation improvements
+- 🌍 Internationalization
+
+### Contributors
+
+<a href="https://github.com/sh1esty1769/AI-for-observability/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=sh1esty1769/AI-for-observability" />
+</a>
+
+---
+
+## 🗺️ Roadmap
+
+### v0.2.0 - Cost Calculation
+- [ ] Automatic cost calculation for OpenAI
+- [ ] Anthropic Claude cost tracking
+- [ ] Cohere cost tracking
+- [ ] Custom cost functions
+
+### v0.3.0 - Integrations
+- [ ] LangChain integration
+- [ ] LlamaIndex integration
+- [ ] AutoGPT integration
+- [ ] CrewAI integration
+
+### v0.4.0 - Dashboard++
+- [ ] Advanced filtering
+- [ ] Charts and graphs
+- [ ] Dark mode
+- [ ] Export from dashboard
+
+### v0.5.0 - Alerts
+- [ ] Cost threshold alerts
+- [ ] Error rate alerts
+- [ ] Webhook notifications
+- [ ] Email notifications
+
+### v1.0.0 - Production Ready
+- [ ] Multi-database support (PostgreSQL, MySQL)
+- [ ] Team collaboration features
+- [ ] API for external tools
+- [ ] Enterprise features
+
+See [TODO.md](TODO.md) for full roadmap.
+
+---
+
+## 📊 Stats
+
+<div align="center">
+
+![GitHub stars](https://img.shields.io/github/stars/sh1esty1769/AI-for-observability?style=social)
+![GitHub forks](https://img.shields.io/github/forks/sh1esty1769/AI-for-observability?style=social)
+![GitHub watchers](https://img.shields.io/github/watchers/sh1esty1769/AI-for-observability?style=social)
+
+![GitHub issues](https://img.shields.io/github/issues/sh1esty1769/AI-for-observability)
+![GitHub pull requests](https://img.shields.io/github/issues-pr/sh1esty1769/AI-for-observability)
+![GitHub last commit](https://img.shields.io/github/last-commit/sh1esty1769/AI-for-observability)
+
+</div>
+
+---
+
+## 💬 Community
+
+- **GitHub Discussions:** [Ask questions, share ideas](https://github.com/sh1esty1769/AI-for-observability/discussions)
+- **Issues:** [Report bugs, request features](https://github.com/sh1esty1769/AI-for-observability/issues)
+- **Twitter/X:** [@maxcodesai](https://x.com/maxcodesai)
 
 ---
 
 ## 📄 License
 
-MIT License - see [LICENSE](LICENSE) file
+MIT License - see [LICENSE](LICENSE) file for details.
+
+---
+
+## 🙏 Acknowledgments
+
+Built with ❤️ by developers who were tired of flying blind.
+
+Inspired by:
+- [Sentry](https://sentry.io/) - Error tracking done right
+- [Datadog](https://www.datadoghq.com/) - Observability platform
+- [LangSmith](https://www.langchain.com/langsmith) - LLM observability
 
 ---
 
@@ -351,12 +544,30 @@ MIT License - see [LICENSE](LICENSE) file
 
 ---
 
-## ⭐ Star us on GitHub!
+## ⭐ Star History
 
-If AgentWatch helps you, give us a star! It helps others discover the project.
+<div align="center">
 
-[![GitHub stars](https://img.shields.io/github/stars/sh1esty1769/AI-for-observability.svg?style=social&label=Star)](https://github.com/sh1esty1769/AI-for-observability)
+[![Star History Chart](https://api.star-history.com/svg?repos=sh1esty1769/AI-for-observability&type=Date)](https://star-history.com/#sh1esty1769/AI-for-observability&Date)
+
+</div>
 
 ---
 
-**Stop flying blind. Start watching your agents.** 👁️
+<div align="center">
+
+### **Stop flying blind. Start watching your agents.** 👁️
+
+**[Get Started Now](#-quick-start)** • **[View Examples](#-examples)** • **[Read Docs](#-documentation)**
+
+<br/>
+
+**If AgentWatch helps you, give us a ⭐ on GitHub!**
+
+[![GitHub stars](https://img.shields.io/github/stars/sh1esty1769/AI-for-observability.svg?style=social&label=Star)](https://github.com/sh1esty1769/AI-for-observability)
+
+<br/>
+
+Made with 💜 by [@maxcodesai](https://x.com/maxcodesai)
+
+</div>
