@@ -175,32 +175,58 @@ OPENAI_PRICING = {
 }
 
 
-# Anthropic Claude Pricing
+# Anthropic Claude Pricing (as of February 2026)
 # https://www.anthropic.com/pricing
+# NOTE: All prices are per 1M tokens
 ANTHROPIC_PRICING = {
+    # Claude 4.5 Family (Latest)
+    "claude-opus-4.5": {
+        "input": 5.00 / 1_000_000,    # $5 per 1M input tokens
+        "output": 25.00 / 1_000_000,  # $25 per 1M output tokens
+    },
+    "claude-4.5-opus": {
+        "input": 5.00 / 1_000_000,
+        "output": 25.00 / 1_000_000,
+    },
+    "claude-sonnet-4.5": {
+        "input": 3.00 / 1_000_000,    # $3 per 1M input tokens (< 200K)
+        "output": 15.00 / 1_000_000,  # $15 per 1M output tokens (< 200K)
+    },
+    "claude-4.5-sonnet": {
+        "input": 3.00 / 1_000_000,
+        "output": 15.00 / 1_000_000,
+    },
+    "claude-haiku-4.5": {
+        "input": 1.00 / 1_000_000,    # $1 per 1M input tokens
+        "output": 5.00 / 1_000_000,   # $5 per 1M output tokens
+    },
+    "claude-4.5-haiku": {
+        "input": 1.00 / 1_000_000,
+        "output": 5.00 / 1_000_000,
+    },
+    
+    # Claude 3.5 Family (Legacy)
+    "claude-3-5-sonnet-20241022": {
+        "input": 3.00 / 1_000_000,
+        "output": 15.00 / 1_000_000,
+    },
+    "claude-3-5-sonnet-20240620": {
+        "input": 3.00 / 1_000_000,
+        "output": 15.00 / 1_000_000,
+    },
+    
+    # Claude 3 Family (Legacy)
     "claude-3-opus-20240229": {
-        "input": 0.015 / 1000,   # $15 per 1M input tokens
-        "output": 0.075 / 1000,  # $75 per 1M output tokens
+        "input": 15.00 / 1_000_000,
+        "output": 75.00 / 1_000_000,
     },
     "claude-3-sonnet-20240229": {
-        "input": 0.003 / 1000,   # $3 per 1M input tokens
-        "output": 0.015 / 1000,  # $15 per 1M output tokens
+        "input": 3.00 / 1_000_000,
+        "output": 15.00 / 1_000_000,
     },
     "claude-3-haiku-20240307": {
-        "input": 0.00025 / 1000,  # $0.25 per 1M input tokens
-        "output": 0.00125 / 1000, # $1.25 per 1M output tokens
-    },
-    "claude-2.1": {
-        "input": 0.008 / 1000,
-        "output": 0.024 / 1000,
-    },
-    "claude-2.0": {
-        "input": 0.008 / 1000,
-        "output": 0.024 / 1000,
-    },
-    "claude-instant-1.2": {
-        "input": 0.0008 / 1000,
-        "output": 0.0024 / 1000,
+        "input": 0.25 / 1_000_000,
+        "output": 1.25 / 1_000_000,
     },
 }
 
